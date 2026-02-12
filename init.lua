@@ -601,6 +601,7 @@ require('lazy').setup({
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
+
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -620,6 +621,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
+        'yaml-language-server',
         -- You can add other tools here that you want Mason to install
       })
 
@@ -630,7 +632,17 @@ require('lazy').setup({
         vim.lsp.config(name, server)
         vim.lsp.enable(name)
       end
-
+      vim.lsp.config('yamlls', {
+        settings = {
+          yaml = {
+            schemas = {
+              ['https://json.schemastore.org/github-workflow.json'] = '/.github/workflows/*',
+              ['../path/relative/to/file.yml'] = '/.github/workflows/*',
+              ['/path/from/root/of/project'] = '/.github/workflows/*',
+            },
+          },
+        },
+      })
       -- Special Lua Config, as recommended by neovim help docs
       vim.lsp.config('lua_ls', {
         on_init = function(client)
@@ -656,6 +668,7 @@ require('lazy').setup({
           Lua = {},
         },
       })
+      vim.lsp.enable 'yamlls'
       vim.lsp.enable 'lua_ls'
     end,
   },
