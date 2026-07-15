@@ -141,6 +141,7 @@ vim.o.timeoutlen = 300
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
+vim.opt.shortmess:append 'I'
 
 vim.opt.termguicolors = true
 

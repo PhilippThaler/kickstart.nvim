@@ -5,6 +5,12 @@
 
 ---@module 'lazy'
 ---@type LazySpec
+
+vim.filetype.add {
+  extension = {
+    j2 = 'jinja',
+  },
+}
 return {
   'mfussenegger/nvim-ansible',
 }
