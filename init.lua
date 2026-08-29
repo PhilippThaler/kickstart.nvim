@@ -109,6 +109,7 @@ vim.o.mouse = 'a'
 
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
+vim.o.expandtab = true
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
@@ -611,27 +612,28 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         gopls = {},
-        delve = {},
         templ = {},
         pyright = {},
         rust_analyzer = {},
         ts_ls = {},
         tinymist = {},
-        ansiblels = {},
+        ansiblels = {
+          settings = {
+            ansible = {
+              -- nixpkgs python3 does not provide an unversioned `python`
+              python = { interpreterPath = 'python3' },
+            },
+          },
+        },
         yamlls = {},
-        yamllint = {},
         bashls = {},
-        shellcheck = {},
-        prettier = {},
-        prettierd = {},
+        nil_ls = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-
-        stylua = {}, -- Used to format Lua code
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
@@ -670,13 +672,8 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        -- You can add other tools here that you want Mason to install
-        'ansible-lint',
-      })
-
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      -- Tools are provided by nixpkgs via home-manager/packages.nix (mason
+      -- binaries are dynamically linked and cannot run on NixOS)
 
       for name, server in pairs(servers) do
         vim.lsp.config(name, server)
@@ -717,6 +714,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        nix = { 'alejandra' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -903,6 +901,8 @@ require('lazy').setup({
         'markdown',
         'markdown_inline',
         'query',
+        'nix',
+        'yaml',
         'vim',
         'vimdoc',
         'typst',
